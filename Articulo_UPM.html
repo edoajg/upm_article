@@ -1,0 +1,1142 @@
+<!DOCTYPE html><html lang="es"><head>
+
+
+<meta charset="utf-8">
+<title>Método de Potencia Unificada (UPM) — Análisis práctico y económico de pérdidas eléctricas</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700&amp;family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,500;0,8..60,600;1,8..60,400&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --navy:          #0B1F3A;
+    --navy-deep:     #081528;
+    --navy-ink:      #0A1828;
+    --slate-900:     #1E293B;
+    --slate-700:     #334155;
+    --slate-600:     #475569;
+    --slate-500:     #64748B;
+    --slate-400:     #94A3B8;
+    --slate-300:     #CBD5E1;
+    --slate-200:     #E2E8F0;
+    --slate-100:     #F1F5F9;
+    --paper:         #FBFBF7;
+    --paper-2:       #F5F5EF;
+    --rule:          #D8DEE7;
+    --copper:        oklch(0.66 0.12 55);
+    --copper-soft:   oklch(0.94 0.035 60);
+
+    --serif:  "Source Serif 4", "Iowan Old Style", Georgia, serif;
+    --grotesk:"Bricolage Grotesque", "Inter", system-ui, sans-serif;
+    --mono:   "JetBrains Mono", ui-monospace, Menlo, monospace;
+  }
+
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--paper);color:var(--navy-ink)}
+  body{
+    font-family:var(--serif);
+    font-size:17.5px;
+    line-height:1.62;
+    text-rendering:optimizeLegibility;
+    -webkit-font-smoothing:antialiased;
+    font-feature-settings:"onum" 1, "liga" 1, "kern" 1;
+  }
+
+  .page{
+    max-width:1180px;
+    margin:0 auto;
+    padding:56px 72px 120px;
+  }
+
+  /* ───────── Masthead ───────── */
+  .masthead{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-end;
+    padding-bottom:14px;
+    border-bottom:1px solid var(--navy);
+    font-family:var(--grotesk);
+    font-size:11.5px;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--slate-600);
+  }
+  .masthead .mark{
+    display:flex; align-items:center; gap:10px;
+    color:var(--navy);
+    font-weight:600;
+  }
+  .mark-dot{
+    width:10px;height:10px;background:var(--navy);
+    transform:rotate(45deg);
+  }
+  .masthead .meta{display:flex; gap:28px}
+  .masthead .meta span b{color:var(--navy); font-weight:600}
+
+  /* ───────── Hero ───────── */
+  .hero{
+    padding:56px 0 48px;
+    border-bottom:1px solid var(--rule);
+    display:block;
+  }
+  .hero-head{
+    display:grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap:64px;
+    align-items:end;
+    margin-bottom:40px;
+  }
+  .kicker{
+    font-family:var(--grotesk);
+    font-size:12px;
+    letter-spacing:0.22em;
+    text-transform:uppercase;
+    color:var(--copper);
+    font-weight:600;
+    margin-bottom:22px;
+    display:flex; align-items:center; gap:12px;
+  }
+  .kicker::before{
+    content:""; width:28px; height:1.5px; background:var(--copper);
+    display:inline-block;
+  }
+  h1.title{
+    font-family:var(--grotesk);
+    font-weight:500;
+    font-size:68px;
+    line-height:0.98;
+    letter-spacing:-0.025em;
+    color:var(--navy);
+    margin:0 0 28px;
+    text-wrap:balance;
+  }
+  h1.title em{
+    font-style:italic;
+    font-family:var(--serif);
+    font-weight:400;
+    color:var(--slate-700);
+  }
+  .standfirst{
+    font-family:var(--serif);
+    font-size:20px;
+    line-height:1.45;
+    color:var(--slate-700);
+    max-width:58ch;
+    font-weight:400;
+    margin:0;
+  }
+  .byline{
+    margin-top:36px;
+    font-family:var(--grotesk);
+    font-size:12px;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--slate-500);
+    display:flex; gap:28px;
+  }
+  .byline b{color:var(--navy); font-weight:600}
+
+  /* Hero figure */
+  .hero-figure{
+    background:var(--navy);
+    color:#E8EEF6;
+    padding:26px 28px 22px;
+    margin:0;
+    display:grid;
+    grid-template-columns: 1fr;
+    gap:16px;
+  }
+  .hero-figure .fig-head{
+    display:flex; justify-content:space-between; align-items:baseline; gap:24px;
+  }
+  .hero-figure .tag{
+    font-family:var(--grotesk);
+    font-size:10.5px;
+    letter-spacing:0.18em;
+    text-transform:uppercase;
+    color:var(--copper);
+    font-weight:600;
+  }
+  .hero-figure .fig-title{
+    font-family:var(--grotesk);
+    font-size:13px;
+    letter-spacing:0.04em;
+    color:#E8EEF6;
+    font-weight:500;
+  }
+  .hero-figure .caption{
+    font-family:var(--grotesk);
+    font-size:12.5px;
+    line-height:1.4;
+    letter-spacing:0.02em;
+    color:#B4C2D4;
+    max-width:90ch;
+  }
+  .hero-figure .img-wrap{
+    background:#06101E;
+    display:flex; align-items:center; justify-content:center;
+    overflow:hidden;
+  }
+  .hero-figure img{
+    display:block;
+    width:100%;
+    height:auto;
+    object-fit:contain;
+  }
+
+  /* ───────── Article body ───────── */
+  .article{
+    display:grid;
+    grid-template-columns: 220px 1fr;
+    gap:80px;
+    padding-top:60px;
+  }
+  .toc{
+    position:sticky;
+    top:32px;
+    align-self:start;
+    font-family:var(--grotesk);
+    font-size:12.5px;
+    color:var(--slate-600);
+  }
+  .toc .label{
+    font-size:10.5px;
+    letter-spacing:0.2em;
+    text-transform:uppercase;
+    color:var(--navy);
+    font-weight:600;
+    padding-bottom:10px;
+    margin-bottom:14px;
+    border-bottom:1px solid var(--navy);
+  }
+  .toc ol{list-style:none; padding:0; margin:0; counter-reset:toc}
+  .toc li{
+    counter-increment:toc;
+    padding:9px 0;
+    border-bottom:1px dashed var(--rule);
+    display:grid; grid-template-columns:28px 1fr; gap:6px;
+    line-height:1.3;
+  }
+  .toc li::before{
+    content:counter(toc,decimal-leading-zero);
+    font-family:var(--mono);
+    font-size:10.5px;
+    color:var(--copper);
+    letter-spacing:0;
+  }
+  .toc a{color:var(--slate-700); text-decoration:none}
+  .toc a:hover{color:var(--navy)}
+
+  .prose{max-width:68ch}
+  .prose p{margin:0 0 1.15em}
+  .prose p + p{text-indent:1.6em}
+
+  .prose h2{
+    font-family:var(--grotesk);
+    font-weight:500;
+    font-size:32px;
+    line-height:1.1;
+    letter-spacing:-0.015em;
+    color:var(--navy);
+    margin:56px 0 22px;
+    display:grid;
+    grid-template-columns:auto 1fr;
+    gap:18px;
+    align-items:baseline;
+    text-wrap:balance;
+  }
+  .prose h2 .num{
+    font-family:var(--mono);
+    font-size:12px;
+    letter-spacing:0.05em;
+    color:var(--copper);
+    padding-top:8px;
+    font-weight:500;
+  }
+  .prose h2::after{
+    content:""; grid-column:1/-1; height:1px;
+    background:var(--rule); margin-top:8px;
+  }
+
+  /* drop cap */
+  .prose > p.lede::first-letter{
+    font-family:var(--grotesk);
+    font-weight:500;
+    float:left;
+    font-size:84px;
+    line-height:0.85;
+    margin:8px 10px -2px 0;
+    color:var(--navy);
+    letter-spacing:-0.03em;
+  }
+  .prose p.lede{text-indent:0}
+
+  /* pull quote */
+  .pullquote{
+    margin:44px -40px;
+    padding:28px 40px;
+    border-top:1px solid var(--navy);
+    border-bottom:1px solid var(--navy);
+    font-family:var(--grotesk);
+    font-weight:400;
+    font-style:italic;
+    font-size:26px;
+    line-height:1.2;
+    color:var(--navy);
+    letter-spacing:-0.01em;
+    text-wrap:balance;
+  }
+  .pullquote .attr{
+    display:block;
+    margin-top:14px;
+    font-family:var(--grotesk);
+    font-style:normal;
+    font-size:11px;
+    letter-spacing:0.2em;
+    text-transform:uppercase;
+    color:var(--slate-500);
+    font-weight:500;
+  }
+
+  /* inline highlight */
+  .hi{
+    background:var(--copper-soft);
+    padding:0 3px;
+    box-shadow: inset 0 -6px 0 var(--copper-soft);
+  }
+  strong{color:var(--navy); font-weight:600}
+
+  /* portrait figure (float) */
+  figure.portrait{
+    float:right;
+    width:180px;
+    margin:6px 0 16px 28px;
+    padding:0;
+    display:block;
+    shape-outside: margin-box;
+  }
+  figure.portrait .frame{
+    background:var(--paper-2);
+    padding:10px 10px 8px;
+    border:1px solid var(--rule);
+  }
+  figure.portrait img{
+    display:block; width:100%; height:auto;
+    filter: grayscale(1) contrast(1.02);
+  }
+  figure.portrait figcaption{
+    font-family:var(--grotesk);
+    font-size:10.5px;
+    letter-spacing:0.06em;
+    line-height:1.35;
+    color:var(--slate-600);
+    margin-top:10px;
+  }
+  figure.portrait figcaption b{
+    display:block;
+    color:var(--navy);
+    font-weight:600;
+    letter-spacing:0.02em;
+    font-size:11.5px;
+    margin-bottom:3px;
+  }
+  @media (max-width: 720px){
+    figure.portrait{float:none; width:140px; margin:6px auto 18px}
+  }
+  @media print{
+    figure.portrait{width:150px}
+  }
+
+  /* ───────── Loss cards (the 5 losses) ───────── */
+  .losses{
+    margin:40px 0 28px;
+    display:grid;
+    grid-template-columns:1fr;
+    gap:0;
+    border-top:1px solid var(--navy);
+    border-bottom:1px solid var(--navy);
+  }
+  .loss{
+    display:grid;
+    grid-template-columns: 64px 1.2fr 2fr 80px;
+    gap:28px;
+    padding:22px 0;
+    border-bottom:1px solid var(--rule);
+    align-items:start;
+  }
+  .loss:last-child{border-bottom:none}
+  .loss .ix{
+    font-family:var(--mono);
+    font-size:12px;
+    letter-spacing:0.05em;
+    color:var(--copper);
+    padding-top:4px;
+  }
+  .loss h3{
+    font-family:var(--grotesk);
+    font-weight:600;
+    font-size:17px;
+    line-height:1.2;
+    color:var(--navy);
+    margin:0 0 6px;
+    letter-spacing:-0.005em;
+  }
+  .loss h3 .sub{
+    display:block;
+    font-weight:400;
+    font-family:var(--serif);
+    font-style:italic;
+    font-size:13.5px;
+    color:var(--slate-500);
+    margin-top:2px;
+    letter-spacing:0;
+  }
+  .loss p{
+    font-size:15px;
+    line-height:1.55;
+    color:var(--slate-700);
+    margin:0;
+  }
+  .loss p + p{text-indent:0; margin-top:8px}
+  .loss .mit{
+    font-family:var(--grotesk);
+    font-size:11px;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--navy);
+    font-weight:600;
+    display:block;
+    margin-top:8px;
+  }
+  .loss .mit::before{content:"↳ "; color:var(--copper)}
+  .loss .bar{
+    padding-top:6px;
+  }
+
+  /* ───────── Product callout (§02) ───────── */
+  .product-card{
+    margin:36px 0 8px;
+    display:grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap:0;
+    border:1px solid var(--rule);
+    background:var(--paper-2);
+  }
+  .product-card .visual{
+    background:#EEF1F5;
+    display:flex; align-items:center; justify-content:center;
+    padding:22px;
+    border-right:1px solid var(--rule);
+  }
+  .product-card .visual img{
+    display:block; width:100%; height:auto; max-height:300px; object-fit:contain;
+  }
+  .product-card .body{
+    padding:26px 28px;
+    display:flex; flex-direction:column; justify-content:center;
+  }
+  .product-card .eyebrow{
+    font-family:var(--grotesk);
+    font-size:10.5px;
+    letter-spacing:0.22em;
+    text-transform:uppercase;
+    color:var(--copper);
+    font-weight:600;
+    margin-bottom:10px;
+  }
+  .product-card h4{
+    font-family:var(--grotesk);
+    font-weight:500;
+    font-size:22px;
+    line-height:1.15;
+    color:var(--navy);
+    margin:0 0 10px;
+    letter-spacing:-0.01em;
+  }
+  .product-card p{
+    font-size:14.5px;
+    line-height:1.5;
+    color:var(--slate-700);
+    margin:0 0 14px;
+  }
+  .product-card .specs{
+    font-family:var(--grotesk);
+    font-size:11px;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:var(--navy);
+    display:flex; flex-wrap:wrap; gap:16px 24px;
+    padding-top:14px;
+    border-top:1px solid var(--rule);
+    font-weight:500;
+  }
+  .product-card .specs b{color:var(--copper); font-weight:600; margin-right:4px}
+
+  /* ───────── In-flow figures ───────── */
+  figure.inflow{
+    margin:32px 0;
+    padding:0;
+    border:1px solid var(--rule);
+    background:var(--paper-2);
+    overflow:hidden;
+  }
+  figure.inflow .shot{
+    background:#0A1424;
+    display:flex; align-items:center; justify-content:center;
+    padding:0;
+  }
+  figure.inflow .shot img{
+    display:block; width:100%; height:auto; max-height:460px; object-fit:contain;
+  }
+  figure.inflow.lit .shot{background:#141C24}
+  figure.inflow figcaption{
+    padding:14px 18px;
+    font-family:var(--grotesk);
+    font-size:12px;
+    line-height:1.45;
+    letter-spacing:0.02em;
+    color:var(--slate-700);
+    display:grid;
+    grid-template-columns: 70px 1fr;
+    gap:14px;
+    align-items:baseline;
+  }
+  figure.inflow figcaption .tag{
+    font-size:10px;
+    letter-spacing:0.16em;
+    text-transform:uppercase;
+    color:var(--copper);
+    font-weight:600;
+  }
+  figure.inflow figcaption b{color:var(--navy); font-weight:600}
+  @media print{
+    .product-card{page-break-inside:avoid}
+    figure.inflow{page-break-inside:avoid}
+  }
+  @media (max-width: 720px){
+    .product-card{grid-template-columns:1fr}
+    .product-card .visual{border-right:none; border-bottom:1px solid var(--rule)}
+  }
+
+  /* ───────── Config table ───────── */
+  .config-table{
+    margin:32px 0;
+    width:100%;
+    border-collapse:collapse;
+    font-size:14.5px;
+  }
+  .config-table th, .config-table td{
+    text-align:left;
+    padding:14px 16px;
+    border-bottom:1px solid var(--rule);
+    vertical-align:top;
+    line-height:1.45;
+  }
+  .config-table thead th{
+    background:var(--navy);
+    color:#E8EEF6;
+    font-family:var(--grotesk);
+    font-size:11px;
+    font-weight:600;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    border-bottom:none;
+  }
+  .config-table td:first-child{
+    font-family:var(--mono);
+    font-size:12px;
+    color:var(--copper);
+    width:56px;
+    padding-top:16px;
+  }
+  .config-table td:nth-child(2){
+    font-family:var(--grotesk);
+    font-weight:600;
+    color:var(--navy);
+    width:28%;
+  }
+  .config-table td:nth-child(3){color:var(--slate-700)}
+
+  /* ───────── Key figures strip ───────── */
+  .figures-strip{
+    display:grid;
+    grid-template-columns:repeat(4, 1fr);
+    gap:0;
+    margin:36px 0;
+    border-top:1px solid var(--navy);
+    border-bottom:1px solid var(--navy);
+  }
+  .fig{
+    padding:22px 20px 22px 0;
+    border-right:1px solid var(--rule);
+  }
+  .fig:last-child{border-right:none}
+  .fig .num{
+    font-family:var(--grotesk);
+    font-weight:500;
+    font-size:38px;
+    line-height:1;
+    letter-spacing:-0.02em;
+    color:var(--navy);
+  }
+  .fig .num sup{
+    font-size:16px;
+    color:var(--copper);
+    vertical-align:top;
+    margin-left:2px;
+  }
+  .fig .lbl{
+    font-family:var(--grotesk);
+    font-size:11px;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--slate-600);
+    margin-top:10px;
+    line-height:1.3;
+  }
+
+  /* ───────── Closing card ───────── */
+  .closing{
+    margin-top:56px;
+    background:var(--navy);
+    color:#E8EEF6;
+    padding:44px 48px;
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap:48px;
+    align-items:center;
+  }
+  .closing h3{
+    font-family:var(--grotesk);
+    font-weight:500;
+    font-size:30px;
+    line-height:1.1;
+    letter-spacing:-0.015em;
+    margin:0 0 14px;
+    color:#fff;
+    text-wrap:balance;
+  }
+  .closing p{
+    font-size:15.5px;
+    line-height:1.55;
+    color:#B4C2D4;
+    margin:0;
+  }
+  .closing .label{
+    font-family:var(--grotesk);
+    font-size:10.5px;
+    letter-spacing:0.22em;
+    text-transform:uppercase;
+    color:var(--copper);
+    font-weight:600;
+    margin-bottom:14px;
+  }
+
+  /* ───────── Colophon / footer ───────── */
+  .colophon{
+    margin-top:72px;
+    padding-top:24px;
+    border-top:1px solid var(--navy);
+    display:flex;
+    justify-content:space-between;
+    font-family:var(--grotesk);
+    font-size:11px;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--slate-500);
+  }
+  .colophon b{color:var(--navy); font-weight:600}
+
+  /* ───────── PDF / print ───────── */
+  @page{
+    size: A4;
+    margin: 18mm 16mm 18mm 16mm;
+  }
+  @media print{
+    html,body{background:#fff}
+    .page{max-width:none; padding:0; margin:0}
+    .article{grid-template-columns: 1fr; gap:0}
+    .toc{display:none}
+    .hero{
+      padding:8px 0 20px;
+    }
+    .hero-head{
+      grid-template-columns: 1fr;
+      gap:20px;
+    }
+    .hero-figure{
+      page-break-inside:avoid;
+      page-break-after:always;
+      break-inside:avoid;
+    }
+    h1.title{font-size:52px}
+    .pullquote{margin:32px 0}
+    .prose h2{page-break-after:avoid}
+    .loss{page-break-inside:avoid}
+    .closing{page-break-inside:avoid}
+    .figures-strip{page-break-inside:avoid}
+    .config-table{page-break-inside:auto}
+    .config-table tr{page-break-inside:avoid}
+  }
+
+  /* ───────── Responsive ───────── */
+  @media (max-width: 1020px){
+    .page{padding:40px 32px 80px}
+    .hero-head{grid-template-columns:1fr; gap:28px}
+    .hero-figure{padding:20px}
+    .article{grid-template-columns:1fr; gap:32px}
+    .toc{position:static}
+    h1.title{font-size:48px}
+    .loss{grid-template-columns: 40px 1fr; gap:16px}
+    .loss .bar{grid-column:1/-1; padding-top:0}
+    .loss > *:nth-child(3){grid-column:1/-1}
+    .figures-strip{grid-template-columns:repeat(2,1fr)}
+    .fig{border-bottom:1px solid var(--rule)}
+    .fig:nth-child(odd){border-right:1px solid var(--rule)}
+    .fig:nth-child(even){border-right:none}
+    .closing{grid-template-columns:1fr; padding:32px}
+    .pullquote{margin:32px 0; font-size:22px}
+  }
+</style>
+</head>
+<body data-cc-id="cc-1" style="cursor: crosshair;">
+<main class="page" data-cc-id="cc-2">
+
+  <!-- MASTHEAD -->
+  <header class="masthead" data-cc-id="cc-12">
+    <div class="mark"><span class="mark-dot"></span> Dossier · Calidad de Energía</div>
+    <div class="meta">
+      <span>Vol. 01 · <b>Nº 04</b></span>
+      <span>Edición técnica · <b>Abril 2026</b></span>
+      <span data-cc-id="cc-13">Lectura · <b>9 min</b></span>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero" data-cc-id="cc-11">
+    <div class="hero-head" data-cc-id="cc-9">
+      <div data-cc-id="cc-10">
+        <div class="kicker">Método de Potencia Unificada (UPM)</div>
+        <h1 class="title" data-cc-id="cc-8" style="">
+          Cuando las pérdidas eléctricas <em data-cc-id="cc-7">dejan de ser</em> un porcentaje abstracto y se convierten en dinero.
+        </h1>
+      </div>
+      <div>
+        <p class="standfirst" data-cc-id="cc-14" style="">
+          Del marco clásico de Steinmetz a la norma IEEE&nbsp;1459, la industria acumuló un siglo de
+          teoría para describir la ineficiencia eléctrica. El UPM la traduce, por primera vez, a
+          cinco categorías físicas medibles —y a un costo anual en divisas.
+        </p>
+        <div class="byline">
+          <span data-cc-id="cc-15" style="">Por · <b>Eduardo Jara G.</b></span>
+          <span data-cc-id="cc-16" style="">Tema · <b>Eficiencia industrial</b></span>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+  <figure class="hero-figure" data-cc-id="cc-3">
+    <div class="fig-head" data-cc-id="cc-5">
+      <div class="tag" data-cc-id="cc-6">Figura 01 · Flujo energético</div>
+      <div class="fig-title">Las cinco fugas entre la red y el trabajo útil</div>
+    </div>
+    <div class="img-wrap">
+      <img src="assets/energy-flow.jpg" alt="Diagrama: 100 % de energía adquirida desde la red con cinco fugas (pérdida efectiva, reactiva, desbalance, distorsión armónica y pérdidas en el neutro) antes de llegar al trabajo útil." data-cc-id="cc-4">
+    </div>
+    <figcaption class="caption">
+      El UPM rastrea el <b style="color:#E8EEF6">100 %</b> de la energía que ingresa desde la red y discrimina, punto por punto, por dónde se fuga antes de convertirse en trabajo útil.
+    </figcaption>
+  </figure>
+
+  <!-- ARTICLE -->
+  <section class="article">
+
+    <!-- TOC -->
+    <aside class="toc">
+      <div class="label">Contenidos</div>
+      <ol>
+        <li><a href="#cap-1">Un siglo de teoría<br>de potencias</a></li>
+        <li><a href="#cap-2">La brecha entre<br>IEEE&nbsp;1459 y la planta</a></li>
+        <li><a href="#cap-3">Los cinco factores<br>del UPM</a></li>
+        <li><a href="#cap-4">Configurar la<br>resistencia de línea</a></li>
+        <li><a href="#cap-5">Traducir físicas<br>en dólares</a></li>
+        <li><a href="#cap-6">ROI, ISO&nbsp;50001<br>y decisiones</a></li>
+      </ol>
+    </aside>
+
+    <!-- PROSE -->
+    <div class="prose">
+
+      <h2 id="cap-1"><span class="num">§ 01</span> Un siglo de teoría de potencias</h2>
+
+      <figure class="portrait" aria-label="Retrato de Charles Proteus Steinmetz">
+        <div class="frame">
+          <img src="assets/steinmetz.png" alt="Charles Proteus Steinmetz, c. 1900"/>
+        </div>
+        <figcaption>
+          <b>Charles P. Steinmetz</b>
+          Autor, en 1897, de la teoría clásica de potencias activa y reactiva.
+        </figcaption>
+      </figure>
+
+      <p class="lede">
+        El panorama eléctrico a nivel industrial ha experimentado una transformación
+        profunda y definitiva a lo largo de las últimas décadas. En el pasado, los sistemas
+        eléctricos operaban mayoritariamente con ondas sinusoidales limpias y alimentaban
+        cargas lineales, como motores de inducción y lámparas incandescentes. Bajo aquellas
+        condiciones ideales, la teoría clásica de potencias desarrollada por
+        <strong>Charles Proteus Steinmetz</strong> en 1897 describía perfectamente el
+        comportamiento del sistema.
+      </p>
+
+      <p>
+        Esta teoría clásica separaba claramente la <strong>potencia activa</strong>, que
+        oscila positivamente y representa el trabajo útil, de la <strong>potencia reactiva</strong>,
+        que oscila simétricamente y no produce un trabajo neto. Sin embargo, el presente
+        industrial está dominado por <span class="hi">cargas no lineales</span> —variadores de
+        frecuencia, fuentes conmutadas, luminarias LED y sistemas UPS—. Estas cargas inyectan
+        corrientes armónicas y generan asimetrías que los medidores convencionales de 50&nbsp;Hz
+        son incapaces de capturar con precisión, dejando la teoría clásica obsoleta frente a
+        las deformaciones de onda reales.
+      </p>
+
+      <p>
+        Durante mucho tiempo la industria dependió de esfuerzos como los de
+        <strong>Fortescue</strong> en 1918, quien introdujo el método de las
+        <em>componentes simétricas</em> para analizar el desbalance descomponiendo el sistema
+        en secuencias directas, inversas y cero. Más recientemente, la norma
+        <strong>IEEE&nbsp;1459</strong> (actualizada en 2010) intentó unificar las diferentes
+        teorías en un marco coherente para evaluar la calidad de energía en presencia de
+        distorsión y desequilibrio.
+      </p>
+
+      <h2 id="cap-2"><span class="num">§ 02</span> La brecha entre IEEE&nbsp;1459 y la planta</h2>
+
+      <p>
+        Aunque la IEEE&nbsp;1459 es matemáticamente rigurosa y exhaustiva, define numerosos
+        parámetros abstractos que resultan complejos de interpretar en la práctica industrial.
+        El resultado es predecible: informes densos en variables que rara vez se traducen en
+        acciones concretas de mitigación en el campo.
+      </p>
+
+      <blockquote class="pullquote">
+        “El UPM toma la rigurosidad matemática de la norma IEEE&nbsp;1459 y la traduce a un marco
+        intuitivo que desglosa las ineficiencias energéticas en categorías con un sentido físico
+        inmediato.”
+        <span class="attr">Método de Potencia Unificada · Fluke × UPV</span>
+      </blockquote>
+
+      <p>
+        Para resolver esa brecha surgió el <strong>Método de Potencia Unificada (UPM)</strong>,
+        desarrollado en colaboración entre <strong>Fluke</strong> y la
+        <strong>Universidad Politécnica de Valencia</strong>. El método fue patentado e
+        integrado como la función <em>Calculadora de Pérdidas de Energía (ELC)</em> dentro de
+        los analizadores de calidad eléctrica de la serie 1770, específicamente en los modelos
+        <strong>1775</strong> y <strong>1777</strong>.
+      </p>
+
+      <!-- PRODUCT CALLOUT -->
+      <aside class="product-card" aria-label="Fluke 1770 Series">
+        <div class="visual">
+          <img src="assets/1777.png" alt="Analizador de calidad de energía Fluke 1777 mostrando en pantalla la Calculadora de Pérdidas de Energía (ELC)">
+        </div>
+        <div class="body">
+          <div class="eyebrow">Herramienta que lo hace posible</div>
+          <h4>Analizadores Fluke serie 1770 con Calculadora de Pérdidas de Energía</h4>
+          <p>
+            El método UPM está integrado de fábrica como la función <b>Energy Loss Calculator&nbsp;(ELC)</b>
+            en los modelos <b>Fluke 1775</b> y <b>1777</b>, los únicos analizadores de calidad
+            eléctrica del mercado capaces de desglosar las cinco categorías físicas de pérdida y
+            monetizarlas en divisas locales.
+          </p>
+          <div class="specs">
+            <span><b>Clase A</b> IEC 61000-4-30</span>
+            <span><b>IEEE</b> 1459</span>
+            <span><b>4V + 4I</b> simultáneos</span>
+          </div>
+        </div>
+      </aside>
+
+      <!-- key figures strip -->
+      <div class="figures-strip" aria-label="Datos clave">
+        <div class="fig">
+          <div class="num">100<sup>%</sup></div>
+          <div class="lbl">Energía adquirida<br>trazada por el método</div>
+        </div>
+        <div class="fig">
+          <div class="num">5</div>
+          <div class="lbl">Factores físicos<br>de pérdida</div>
+        </div>
+        <div class="fig">
+          <div class="num">3</div>
+          <div class="lbl">Vías para ingresar<br>la resistencia de línea</div>
+        </div>
+        <div class="fig">
+          <div class="num">1<sup>USD</sup></div>
+          <div class="lbl">Unidad de reporte<br>final del análisis</div>
+        </div>
+      </div>
+
+      <h2 id="cap-3"><span class="num">§ 03</span> Los cinco factores del UPM</h2>
+
+      <p>
+        El gran aporte del UPM es que rastrea el 100&nbsp;% de la energía adquirida desde la red
+        eléctrica y <strong>discrimina exactamente por dónde se fuga</strong> antes de
+        convertirse en trabajo útil, dividiendo las pérdidas en cinco factores clave:
+      </p>
+
+      <!-- LOSSES -->
+      <div class="losses">
+
+        <article class="loss">
+          <div class="ix">01</div>
+          <div>
+            <h3>Pérdida efectiva
+              <span class="sub">Calentamiento de línea · I²R</span>
+            </h3>
+          </div>
+          <div>
+            <p>
+              Ineficiencia térmica producida cuando la energía disipa calor físico al
+              transportarse por los conductores desde la fuente hasta la carga.
+            </p>
+            <span class="mit">Mitigación · redimensionar cable o instalar conductores en paralelo</span>
+          </div>
+          <div class="bar" aria-hidden="true">
+            <!-- tiny sparkline -->
+            <svg viewBox="0 0 80 40" width="80" height="40">
+              <path d="M0,30 L20,28 L40,22 L60,14 L80,8" fill="none" stroke="#0B1F3A" stroke-width="1.5"></path>
+              <circle cx="80" cy="8" r="2.5" fill="#C8A982"></circle>
+            </svg>
+          </div>
+        </article>
+
+        <article class="loss">
+          <div class="ix">02</div>
+          <div>
+            <h3>Pérdida reactiva
+              <span class="sub">Potencia magnetizante</span>
+            </h3>
+          </div>
+          <div>
+            <p>
+              Ocupa espacio y capacidad en el sistema eléctrico pero no ejerce trabajo —como la
+              espuma en un vaso de cerveza—. Aparece típicamente junto a motores y
+              transformadores.
+            </p>
+            <span class="mit">Mitigación · corrección activa del factor de potencia</span>
+          </div>
+          <div class="bar" aria-hidden="true">
+            <svg viewBox="0 0 80 40" width="80" height="40">
+              <path d="M0,20 Q20,5 40,20 T80,20" fill="none" stroke="#0B1F3A" stroke-width="1.5"></path>
+            </svg>
+          </div>
+        </article>
+
+        <article class="loss">
+          <div class="ix">03</div>
+          <div>
+            <h3>Desbalance
+              <span class="sub">Asimetría trifásica</span>
+            </h3>
+          </div>
+          <div>
+            <p>
+              Ocurre cuando las tres fases no comparten la misma amplitud ni conservan su
+              desfase ideal de 120°. Inyecta una secuencia inversa que actúa frenando los
+              motores y causa ineficiencia severa.
+            </p>
+            <span class="mit">Mitigación · redistribuir cargas monofásicas · revisar impedancias</span>
+          </div>
+          <div class="bar" aria-hidden="true">
+            <svg viewBox="0 0 80 40" width="80" height="40">
+              <g stroke-width="1.5" fill="none">
+                <path d="M0,20 Q10,6 20,20 T40,20 T60,20 T80,20" stroke="#0B1F3A"></path>
+                <path d="M0,22 Q10,10 20,22 T40,22 T60,22 T80,22" stroke="#64748B" stroke-dasharray="2 2"></path>
+                <path d="M0,18 Q10,30 20,18 T40,18 T60,18 T80,18" stroke="#C8A982"></path>
+              </g>
+            </svg>
+          </div>
+        </article>
+
+        <article class="loss">
+          <div class="ix">04</div>
+          <div>
+            <h3>Distorsión armónica
+              <span class="sub">Cargas no lineales · 150, 250 Hz…</span>
+            </h3>
+          </div>
+          <div>
+            <p>
+              Cargas no lineales superponen frecuencias múltiples a la fundamental,
+              deformando visiblemente la onda. Genera calentamiento severo y desgaste
+              prematuro en transformadores y cables.
+            </p>
+            <span class="mit">Mitigación · filtros armónicos pasivos o activos</span>
+          </div>
+          <div class="bar" aria-hidden="true">
+            <svg viewBox="0 0 80 40" width="80" height="40">
+              <path d="M0,20 Q5,4 10,20 T20,20 T30,20 T40,20 T50,20 T60,20 T70,20 T80,20" fill="none" stroke="#0B1F3A" stroke-width="1.5"></path>
+              <path d="M0,20 C10,10 20,30 30,20 C40,10 50,30 60,20 C70,10 80,30 80,20" fill="none" stroke="#C8A982" stroke-width="1"></path>
+            </svg>
+          </div>
+        </article>
+
+        <article class="loss">
+          <div class="ix">05</div>
+          <div>
+            <h3>Pérdidas en el neutro
+              <span class="sub">Secuencia cero · retorno</span>
+            </h3>
+          </div>
+          <div>
+            <p>
+              Corrientes de retorno originadas por componentes de secuencia cero —tanto por
+              desbalances como por armónicos— que se acumulan en el conductor neutro y pueden
+              provocar sobrecalentamiento peligroso.
+            </p>
+            <span class="mit">Mitigación · aumentar la sección del cable neutro</span>
+          </div>
+          <div class="bar" aria-hidden="true">
+            <svg viewBox="0 0 80 40" width="80" height="40">
+              <rect x="0" y="28" width="16" height="4" fill="#0B1F3A"></rect>
+              <rect x="20" y="22" width="16" height="10" fill="#0B1F3A"></rect>
+              <rect x="40" y="14" width="16" height="18" fill="#0B1F3A"></rect>
+              <rect x="60" y="6" width="16" height="26" fill="#C8A982"></rect>
+            </svg>
+          </div>
+        </article>
+
+      </div>
+
+      <h2 id="cap-4"><span class="num">§ 04</span> Configurar la resistencia de línea</h2>
+
+      <figure class="inflow lit">
+        <div class="shot">
+          <img src="assets/fieldwork.jpg" alt="Técnico con EPI midiendo un tablero eléctrico con un analizador Fluke 1777">
+        </div>
+        <figcaption>
+          <span class="tag">Figura 02</span>
+          <span>Caracterización en campo: <b>el analizador se conecta directamente al tablero</b> mientras el equipo está en operación. La calidad del dato de entrada —y, sobre todo, de la resistencia de línea— determina la fidelidad del diagnóstico económico posterior.</span>
+        </figcaption>
+      </figure>
+
+      <p>
+        Para que la Calculadora de Pérdidas de Energía opere correctamente, el ingeniero debe
+        configurar adecuadamente las especificaciones del sistema. El parámetro más crítico es
+        la <strong>resistencia de la línea</strong>. El UPM admite ingresarlo por tres vías,
+        cada una con un compromiso distinto entre rapidez y precisión:
+      </p>
+
+      <table class="config-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Vía de ingreso</th>
+            <th>Descripción · precisión</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>01</td>
+            <td>Estimación por disyuntor</td>
+            <td>Se deriva del amperaje máximo del interruptor de protección. Rápido, pero con una banda amplia de incertidumbre. Útil para tamizar rápido varias líneas.</td>
+          </tr>
+          <tr>
+            <td>02</td>
+            <td>Cálculo por conductor</td>
+            <td>Se ingresan material, sección transversal y longitud del cable. Entrega un valor teórico coherente con el diseño de la instalación.</td>
+          </tr>
+          <tr>
+            <td>03</td>
+            <td>Medición directa</td>
+            <td>Se introduce el valor obtenido con un miliohmímetro de precisión. Es la opción más exacta y la recomendada para diagnósticos monetizados.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p>
+        Con la resistencia bien caracterizada, el algoritmo es capaz de determinar si el origen
+        de las pérdidas proviene <strong>intrínsecamente del lado de la acometida</strong>
+        (fuente) o de los <strong>conductores internos de la instalación</strong> (línea). Esa
+        distinción, en la práctica, decide si el interlocutor es la distribuidora o el propio
+        equipo de mantenimiento interno.
+      </p>
+
+      <h2 id="cap-5"><span class="num">§ 05</span> Traducir físicas en dólares</h2>
+
+      <figure class="inflow">
+        <div class="shot">
+          <img src="assets/elc-screen.png" alt="Pantalla Energy Loss Overview del Fluke 1777: pérdida total, pérdida en línea y pérdida en fuente desglosadas por efectiva, reactiva, desbalance, distorsión y neutro">
+        </div>
+        <figcaption>
+          <span class="tag">Figura 03</span>
+          <span>Pantalla <b>Energy Loss Overview</b> del Fluke 1777. El ELC separa <b>Total Loss</b> en <b>Line Loss</b> (conductores internos) y <b>Source Loss</b> (acometida), y detalla cada una de las cinco categorías con su equivalente energético anual en kWh/año.</span>
+        </figcaption>
+      </figure>
+
+      <p>
+        El aspecto más disruptivo de la implementación del UPM en el software de los equipos es
+        su capacidad de <span class="hi">monetizar directamente las fallas técnicas</span>. Al
+        introducir la tarifa eléctrica que paga la planta —el valor en divisas locales por
+        kWh—, la calculadora proyecta el costo económico anual de cada uno de los cinco
+        fenómenos de pérdida.
+      </p>
+
+      <p>
+        En lugar de entregar un porcentaje abstracto de distorsión (THD), el equipo muestra con
+        precisión <strong>cuántos miles de dólares al año se desperdician exclusivamente por
+        culpa de los armónicos</strong> frente al desbalance, o cuánto pesa el calentamiento de
+        línea frente a la reactiva. El reporte deja de ser un documento para especialistas y se
+        convierte en un presupuesto.
+      </p>
+
+      <h2 id="cap-6"><span class="num">§ 06</span> ROI, ISO&nbsp;50001 y decisiones</h2>
+
+      <p>
+        Este nivel de visibilidad financiera transforma los reportes de calidad eléctrica en
+        herramientas de alto impacto gerencial. Facilita el cálculo del
+        <strong>Retorno de Inversión (ROI)</strong> necesario para justificar la compra de
+        activos de mitigación —filtros activos, bancos de condensadores, modernización de
+        infraestructura— porque el ahorro proyectado ya viene expresado en la misma unidad que
+        la cotización del proveedor.
+      </p>
+
+      <p>
+        Finalmente, la adopción del Método de Potencia Unificada resulta indispensable para
+        aquellas organizaciones comerciales e industriales que persiguen el cumplimiento de
+        normativas estrictas como la <strong>ISO&nbsp;50001</strong>, aportando un diagnóstico
+        exacto, inteligente y rentable sobre la eficiencia y la gestión de sus recursos
+        energéticos.
+      </p>
+
+      <!-- CLOSING -->
+      <aside class="closing">
+        <div>
+          <div class="label">En síntesis</div>
+          <h3>Del porcentaje abstracto al presupuesto defendible.</h3>
+        </div>
+        <p>
+          El UPM no inventa una física nueva: reorganiza la existente en categorías con sentido
+          práctico y les pone un precio. Ese gesto —aparentemente modesto— cambia quién está
+          sentado en la mesa cuando se discute eficiencia: ya no solo el ingeniero de
+          mantenimiento, sino también la dirección financiera.
+        </p>
+      </aside>
+
+      <!-- Colophon -->
+      <footer class="colophon">
+        <div><b>Dossier UPM</b> · Redacción técnica</div>
+        <div>Fuentes · IEEE&nbsp;1459 (2010) · Fluke × UPV</div>
+        <div>Pág. <b>01</b></div>
+      </footer>
+
+    </div>
+  </section>
+
+</main>
+
+
+</body></html>
