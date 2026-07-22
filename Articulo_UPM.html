@@ -2,8 +2,10 @@
 
 
 <meta charset="utf-8">
-<title>Método de Potencia Unificada (UPM) — Análisis práctico y económico de pérdidas eléctricas</title>
+<title>Método de Potencia Unificada (UPM) — Medir, modelar y explicitar supuestos</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="El Método de Potencia Unificada (UPM) organiza mediciones de potencia y calidad de energía, separa pérdidas de línea y fuente y permite anualizar resultados bajo supuestos explícitos.">
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700&amp;family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,500;0,8..60,600;1,8..60,400&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
@@ -700,443 +702,196 @@
   }
 </style>
 </head>
-<body data-cc-id="cc-1" style="cursor: crosshair;">
-<main class="page" data-cc-id="cc-2">
+<body>
+<main class="page">
 
   <!-- MASTHEAD -->
-  <header class="masthead" data-cc-id="cc-12">
+  <header class="masthead">
     <div class="mark"><span class="mark-dot"></span> Dossier · Calidad de Energía</div>
     <div class="meta">
       <span>Vol. 01 · <b>Nº 04</b></span>
-      <span>Edición técnica · <b>Abril 2026</b></span>
-      <span data-cc-id="cc-13">Lectura · <b>9 min</b></span>
+      <span>Edición técnica · <b>Julio 2026</b></span>
+      <span>Lectura · <b>12 min</b></span>
     </div>
   </header>
 
   <!-- HERO -->
-  <section class="hero" data-cc-id="cc-11">
-    <div class="hero-head" data-cc-id="cc-9">
-      <div data-cc-id="cc-10">
+  <section class="hero">
+    <div class="hero-head">
+      <div>
         <div class="kicker">Método de Potencia Unificada (UPM)</div>
-        <h1 class="title" data-cc-id="cc-8" style="">
-          Cuando las pérdidas eléctricas <em data-cc-id="cc-7">dejan de ser</em> un porcentaje abstracto y se convierten en dinero.
-        </h1>
+        <h1 class="title">Medir la potencia, modelar las pérdidas y hacer explícitos los supuestos</h1>
       </div>
       <div>
-        <p class="standfirst" data-cc-id="cc-14" style="">
-          Del marco clásico de Steinmetz a la norma IEEE&nbsp;1459, la industria acumuló un siglo de
-          teoría para describir la ineficiencia eléctrica. El UPM la traduce, por primera vez, a
-          cinco categorías físicas medibles —y a un costo anual en divisas.
+        <p class="standfirst">
+          El Método de Potencia Unificada (UPM) organiza magnitudes de potencia y calidad de energía en un diagnóstico aplicado. Su valor no está en convertir toda magnitud no activa en una pérdida física, sino en separar, dentro de una frontera de medición definida, la disipación resistiva, la utilización de capacidad y las contribuciones asociadas con desequilibrio y distorsión; después, esos resultados pueden anualizarse con una tarifa y un perfil de carga documentados.
         </p>
         <div class="byline">
-          <span data-cc-id="cc-15" style="">Por · <b>Eduardo Jara G.</b></span>
-          <span data-cc-id="cc-16" style="">Tema · <b>Eficiencia industrial</b></span>
+          <span>Por · <b>Eduardo Jara G.</b></span>
+          <span>Tema · <b>Medición y diagnóstico de calidad de energía</b></span>
         </div>
       </div>
     </div>
-
   </section>
 
-  <figure class="hero-figure" data-cc-id="cc-3">
-    <div class="fig-head" data-cc-id="cc-5">
-      <div class="tag" data-cc-id="cc-6">Figura 01 · Flujo energético</div>
-      <div class="fig-title">Las cinco fugas entre la red y el trabajo útil</div>
+  <figure class="hero-figure">
+    <div class="fig-head">
+      <div class="tag">Figura 01 · Flujo de potencia y energía en la frontera de medida</div>
+      <div class="fig-title">Qué se mide y qué se modela entre la fuente y la carga</div>
     </div>
     <div class="img-wrap">
-      <img src="assets/energy-flow.jpg" alt="Diagrama: 100 % de energía adquirida desde la red con cinco fugas (pérdida efectiva, reactiva, desbalance, distorsión armónica y pérdidas en el neutro) antes de llegar al trabajo útil." data-cc-id="cc-4">
+      <img src="assets/perdidas_energia_final.svg" alt="Diagrama conceptual de una instalación eléctrica: la potencia y la energía atraviesan una frontera de medida desde la fuente hacia la carga; el análisis separa contribuciones activas, reactivas, de desequilibrio, de distorsión y de corriente de neutro, sin presentarlas todas como pérdidas Joule independientes.">
     </div>
     <figcaption class="caption">
-      El UPM rastrea el <b style="color:#E8EEF6">100 %</b> de la energía que ingresa desde la red y discrimina, punto por punto, por dónde se fuga antes de convertirse en trabajo útil.
+      El UPM parte de una frontera de medición, una ventana temporal y un modelo de red declarados. La energía activa registrada puede conciliarse con las categorías calculadas; las categorías no deben interpretarse automáticamente como cinco pérdidas físicas independientes ni como una atribución contractual de responsabilidad.
     </figcaption>
   </figure>
 
   <!-- ARTICLE -->
   <section class="article">
-
-    <!-- TOC -->
     <aside class="toc">
       <div class="label">Contenidos</div>
       <ol>
         <li><a href="#cap-1">Un siglo de teoría<br>de potencias</a></li>
         <li><a href="#cap-2">La brecha entre<br>IEEE&nbsp;1459 y la planta</a></li>
-        <li><a href="#cap-3">Los cinco factores<br>del UPM</a></li>
+        <li><a href="#cap-3">Las cinco categorías<br>del UPM</a></li>
         <li><a href="#cap-4">Configurar la<br>resistencia de línea</a></li>
-        <li><a href="#cap-5">Traducir físicas<br>en dólares</a></li>
+        <li><a href="#cap-5">Traducir magnitudes<br>en un equivalente económico</a></li>
         <li><a href="#cap-6">ROI, ISO&nbsp;50001<br>y decisiones</a></li>
       </ol>
     </aside>
 
-    <!-- PROSE -->
     <div class="prose">
-
       <h2 id="cap-1"><span class="num">§ 01</span> Un siglo de teoría de potencias</h2>
 
       <figure class="portrait" aria-label="Retrato de Charles Proteus Steinmetz">
         <div class="frame">
-          <img src="assets/steinmetz.png" alt="Charles Proteus Steinmetz, c. 1900"/>
+          <img src="assets/steinmetz.png" alt="Retrato histórico de Charles Proteus Steinmetz, presentado como referencia de la teoría clásica de potencia en régimen sinusoidal.">
         </div>
         <figcaption>
           <b>Charles P. Steinmetz</b>
-          Autor, en 1897, de la teoría clásica de potencias activa y reactiva.
+          La formulación clásica de potencia activa y reactiva es rigurosa en el dominio sinusoidal. La medición moderna debe declarar cuándo se extiende el análisis a formas de onda distorsionadas y a sistemas desequilibrados.
         </figcaption>
       </figure>
 
       <p class="lede">
-        El panorama eléctrico a nivel industrial ha experimentado una transformación
-        profunda y definitiva a lo largo de las últimas décadas. En el pasado, los sistemas
-        eléctricos operaban mayoritariamente con ondas sinusoidales limpias y alimentaban
-        cargas lineales, como motores de inducción y lámparas incandescentes. Bajo aquellas
-        condiciones ideales, la teoría clásica de potencias desarrollada por
-        <strong>Charles Proteus Steinmetz</strong> en 1897 describía perfectamente el
-        comportamiento del sistema.
+        La teoría de potencia en régimen sinusoidal sigue siendo exacta dentro de sus hipótesis: para una tensión y una corriente sinusoidales de frecuencia fundamental, la potencia activa se obtiene como el valor medio de <code>v(t)i(t)</code> y, en el caso monofásico, puede escribirse como <code>P = V I cos φ</code>. La potencia reactiva asociada al fundamental, usando magnitudes RMS de la componente fundamental, <code>Q<sub>1</sub> = V<sub>1,rms</sub> I<sub>1,rms</sub> sin φ<sub>1</sub></code>, caracteriza el intercambio de energía almacenada en campos eléctricos y magnéticos. <strong>Q no es, por sí misma, una potencia disipada</strong>: la disipación real depende de elementos resistivos, pérdidas del material y otros mecanismos físicos del sistema.
       </p>
-
       <p>
-        Esta teoría clásica separaba claramente la <strong>potencia activa</strong>, que
-        oscila positivamente y representa el trabajo útil, de la <strong>potencia reactiva</strong>,
-        que oscila simétricamente y no produce un trabajo neto. Sin embargo, el presente
-        industrial está dominado por <span class="hi">cargas no lineales</span> —variadores de
-        frecuencia, fuentes conmutadas, luminarias LED y sistemas UPS—. Estas cargas inyectan
-        corrientes armónicas y generan asimetrías que los medidores convencionales de 50&nbsp;Hz
-        son incapaces de capturar con precisión, dejando la teoría clásica obsoleta frente a
-        las deformaciones de onda reales.
+        En una instalación actual, las tensiones y corrientes pueden contener armónicos, interarmónicos, transitorios, componentes de secuencia y variaciones de magnitud. Un variador de velocidad, una fuente conmutada o un rectificador puede presentar una corriente no sinusoidal aun cuando la tensión de alimentación sea aproximadamente sinusoidal. En esas condiciones, el producto de valores eficaces <code>V<sub>rms</sub> I<sub>rms</sub></code> puede usarse como magnitud de potencia aparente, pero no basta para describir por separado el intercambio fundamental, el contenido armónico, el factor de potencia total y la utilización de conductores y convertidores.
       </p>
-
       <p>
-        Durante mucho tiempo la industria dependió de esfuerzos como los de
-        <strong>Fortescue</strong> en 1918, quien introdujo el método de las
-        <em>componentes simétricas</em> para analizar el desbalance descomponiendo el sistema
-        en secuencias directas, inversas y cero. Más recientemente, la norma
-        <strong>IEEE&nbsp;1459</strong> (actualizada en 2010) intentó unificar las diferentes
-        teorías en un marco coherente para evaluar la calidad de energía en presencia de
-        distorsión y desequilibrio.
+        La descomposición en componentes simétricas representa un conjunto trifásico mediante componentes de secuencia positiva, negativa y cero. La secuencia negativa puede producir efectos térmicos y de par inverso en máquinas, pero su presencia no equivale automáticamente a una cantidad única de energía “perdida”. La secuencia cero puede circular por el neutro o por caminos de retorno definidos por la topología y la puesta a tierra; su efecto térmico depende de la corriente y de la impedancia efectivamente recorrida.
+      </p>
+      <p>
+        El problema no es que la teoría sinusoidal sea obsoleta, sino que <strong>sus magnitudes deben complementarse con definiciones adecuadas para formas de onda no sinusoidales y sistemas desequilibrados</strong>. IEEE Std 1459-2010 establece definiciones comunes para cuantificar cantidades de potencia y energía eléctrica en circuitos monofásicos y trifásicos bajo condiciones sinusoidales, no sinusoidales, equilibradas y desequilibradas. La norma aporta definiciones comunes para interpretar cantidades de potencia y energía; no determina por sí sola qué equipo causó una perturbación, quién debe pagarla ni qué inversión tendrá retorno.
       </p>
 
       <h2 id="cap-2"><span class="num">§ 02</span> La brecha entre IEEE&nbsp;1459 y la planta</h2>
-
       <p>
-        Aunque la IEEE&nbsp;1459 es matemáticamente rigurosa y exhaustiva, define numerosos
-        parámetros abstractos que resultan complejos de interpretar en la práctica industrial.
-        El resultado es predecible: informes densos en variables que rara vez se traducen en
-        acciones concretas de mitigación en el campo.
+        IEEE Std 1459-2010 debe leerse con precisión. Su título y alcance se refieren a <strong>definiciones para la medición de cantidades de potencia eléctrica</strong> en circuitos monofásicos y trifásicos, bajo condiciones sinusoidales, no sinusoidales, equilibradas y desequilibradas. La norma proporciona definiciones comunes para interpretar resultados de instrumentación y evitar que una sola cifra de factor de potencia o <code>S = V<sub>rms</sub> I<sub>rms</sub></code> oculte la naturaleza de la forma de onda. La comparabilidad efectiva exige además verificar la implementación, la clase, el ancho de banda, los transductores, la sincronización y el método de agregación.
       </p>
-
       <blockquote class="pullquote">
-        “El UPM toma la rigurosidad matemática de la norma IEEE&nbsp;1459 y la traduce a un marco
-        intuitivo que desglosa las ineficiencias energéticas en categorías con un sentido físico
-        inmediato.”
-        <span class="attr">Método de Potencia Unificada · Fluke × UPV</span>
+        “IEEE 1459-2010 define cantidades y relaciones de medición; el UPM/ELC añade una capa de organización aplicada y estimación económica. Ninguno de los dos, por sí solo, prueba causalidad ni fija una obligación tarifaria.”
+        <span class="attr">Síntesis editorial de esta propuesta; no es una cita textual de IEEE ni de Fluke.</span>
       </blockquote>
-
       <p>
-        Para resolver esa brecha surgió el <strong>Método de Potencia Unificada (UPM)</strong>,
-        desarrollado en colaboración entre <strong>Fluke</strong> y la
-        <strong>Universidad Politécnica de Valencia</strong>. El método fue patentado e
-        integrado como la función <em>Calculadora de Pérdidas de Energía (ELC)</em> dentro de
-        los analizadores de calidad eléctrica de la serie 1770, específicamente en los modelos
-        <strong>1775</strong> y <strong>1777</strong>.
+        Ese alcance tiene límites relevantes para una planta. IEEE 1459-2010 <strong>no es una norma de causalidad</strong>: una medición en un punto no identifica por sí misma qué carga originó una corriente armónica o un desequilibrio. Tampoco es una norma de liquidación tarifaria, una regla de reparto de pérdidas entre partes, una metodología contractual de “culpa” o una evaluación económica completa. Para esos usos se requieren una frontera de medición, registros sincronizados, información de red, condiciones de operación, criterios de calidad aplicables y, cuando corresponda, reglas del contrato o del código de red.
+      </p>
+      <p>
+        El UPM/ELC puede ocupar la zona intermedia entre la definición metrológica y la decisión de mantenimiento: toma variables medidas y parámetros de instalación, las organiza en categorías de análisis y calcula equivalentes energéticos o monetarios conforme a un modelo. La afirmación técnicamente defendible es que <strong>facilita una desagregación aplicada</strong>, no que reemplaza el estudio de flujo de carga, cortocircuito, armónicos, coordinación de protecciones o resonancia.
+      </p>
+      <p>
+        En la documentación pública consultada de IEEE, IEEE 1459-2010 figura actualmente como estándar inactivo-reservado y como supersedido por IEEE 1459-2025. Este dato editorial no invalida su uso como referencia histórica o como base de un procedimiento que lo cite expresamente, pero exige indicar la edición empleada y verificar la edición vigente cuando el resultado se utilice para especificación, conformidad o contrato.
       </p>
 
-      <!-- PRODUCT CALLOUT -->
-      <aside class="product-card" aria-label="Fluke 1770 Series">
+      <aside class="product-card" aria-label="Analizadores Fluke de la familia 1770 y función ELC">
         <div class="visual">
-          <img src="assets/1777.png" alt="Analizador de calidad de energía Fluke 1777 mostrando en pantalla la Calculadora de Pérdidas de Energía (ELC)">
+          <img src="assets/1777.png" alt="Analizador de calidad de energía Fluke de la familia 1770 con una pantalla de análisis de pérdidas; la imagen ilustra una herramienta de medición y cálculo, no una prueba universal de cinco pérdidas independientes.">
         </div>
         <div class="body">
-          <div class="eyebrow">Herramienta que lo hace posible</div>
-          <h4>Analizadores Fluke serie 1770 con Calculadora de Pérdidas de Energía</h4>
+          <div class="eyebrow">Instrumentación de apoyo al diagnóstico</div>
+          <h4>Analizadores Fluke de la familia 1770 y función ELC</h4>
           <p>
-            El método UPM está integrado de fábrica como la función <b>Energy Loss Calculator&nbsp;(ELC)</b>
-            en los modelos <b>Fluke 1775</b> y <b>1777</b>, los únicos analizadores de calidad
-            eléctrica del mercado capaces de desglosar las cinco categorías físicas de pérdida y
-            monetizarlas en divisas locales.
+            El <strong>Método de Potencia Unificada (UPM)</strong> se presenta aquí como una metodología aplicada de desagregación de contribuciones de potencia y energía. La función <b>Energy Loss Calculator (ELC)</b>, si está documentada para el modelo y firmware utilizados, puede calcular estimaciones conforme a su manual; el usuario debe conservar la configuración, los parámetros y la edición normativa aplicable. La herramienta no sustituye la validación del esquema unifilar, la selección de la frontera de medida, el análisis de impedancias ni la revisión de los límites de la tarifa.
           </p>
           <div class="specs">
-            <span><b>Clase A</b> IEC 61000-4-30</span>
-            <span><b>IEEE</b> 1459</span>
-            <span><b>4V + 4I</b> simultáneos</span>
+            <span><b>IEC 61000-4-30</b>: clase y edición declaradas por el modelo; verificar la declaración de conformidad (la edición 2025 contempla clases A y S)</span>
+            <span><b>IEEE 1459</b> referencia de definiciones</span>
+            <span><b>Canales</b> verificar configuración del instrumento</span>
           </div>
         </div>
       </aside>
 
-      <!-- key figures strip -->
-      <div class="figures-strip" aria-label="Datos clave">
-        <div class="fig">
-          <div class="num">100<sup>%</sup></div>
-          <div class="lbl">Energía adquirida<br>trazada por el método</div>
-        </div>
-        <div class="fig">
-          <div class="num">5</div>
-          <div class="lbl">Factores físicos<br>de pérdida</div>
-        </div>
-        <div class="fig">
-          <div class="num">3</div>
-          <div class="lbl">Vías para ingresar<br>la resistencia de línea</div>
-        </div>
-        <div class="fig">
-          <div class="num">1<sup>USD</sup></div>
-          <div class="lbl">Unidad de reporte<br>final del análisis</div>
-        </div>
+      <div class="figures-strip" aria-label="Datos editoriales de alcance del método">
+        <div class="fig"><div class="num">Conciliación</div><div class="lbl">Conciliación de energía activa — verificable solo dentro de la incertidumbre y la frontera declaradas</div></div>
+        <div class="fig"><div class="num">5</div><div class="lbl">Categorías usadas por la presentación UPM/ELC; no cinco Joule independientes</div></div>
+        <div class="fig"><div class="num">3</div><div class="lbl">Vías editoriales de parametrización de la resistencia</div></div>
+        <div class="fig"><div class="num">kWh · tarifa</div><div class="lbl">Salida económica derivada de energía, tarifa, periodo y supuestos</div></div>
       </div>
 
-      <h2 id="cap-3"><span class="num">§ 03</span> Los cinco factores del UPM</h2>
-
+      <h2 id="cap-3"><span class="num">§ 03</span> Las cinco categorías del UPM</h2>
       <p>
-        El gran aporte del UPM es que rastrea el 100&nbsp;% de la energía adquirida desde la red
-        eléctrica y <strong>discrimina exactamente por dónde se fuga</strong> antes de
-        convertirse en trabajo útil, dividiendo las pérdidas en cinco factores clave:
+        Las cinco categorías deben leerse como una <strong>taxonomía de diagnóstico</strong>, no como una partición termodinámica única. Para hacerla reproducible, el informe debe declarar: sistema monofásico o trifásico, conexión y neutro, frecuencia nominal, canales medidos, método de agregación temporal, espectro considerado, frontera de medición, resistencia o impedancia de referencia, perfil de carga y tarifa.
       </p>
+      <p>Para una ventana de medida <code>T</code>, la energía activa registrada en una frontera puede expresarse como <code>E<sub>P</sub> = ∫₀ᵀ p(t) dt</code>, con <code>p(t) = Σ v<sub>k</sub>(t)i<sub>k</sub>(t)</code> según la conexión y la convención de signos.</p>
+      <p>Las categorías de UPM/ELC pueden expresarse en unidades de potencia equivalente y luego integrarse a kWh. <strong>No deben sumarse ni compararse como si fueran magnitudes independientes sin conocer la convención exacta del algoritmo</strong>, porque una misma corriente puede contribuir simultáneamente a calentamiento resistivo, demanda aparente, distorsión y corriente de neutro.</p>
 
-      <!-- LOSSES -->
       <div class="losses">
-
-        <article class="loss">
-          <div class="ix">01</div>
-          <div>
-            <h3>Pérdida efectiva
-              <span class="sub">Calentamiento de línea · I²R</span>
-            </h3>
-          </div>
-          <div>
-            <p>
-              Ineficiencia térmica producida cuando la energía disipa calor físico al
-              transportarse por los conductores desde la fuente hasta la carga.
-            </p>
-            <span class="mit">Mitigación · redimensionar cable o instalar conductores en paralelo</span>
-          </div>
-          <div class="bar" aria-hidden="true">
-            <!-- tiny sparkline -->
-            <svg viewBox="0 0 80 40" width="80" height="40">
-              <path d="M0,30 L20,28 L40,22 L60,14 L80,8" fill="none" stroke="#0B1F3A" stroke-width="1.5"></path>
-              <circle cx="80" cy="8" r="2.5" fill="#C8A982"></circle>
-            </svg>
-          </div>
-        </article>
-
-        <article class="loss">
-          <div class="ix">02</div>
-          <div>
-            <h3>Pérdida reactiva
-              <span class="sub">Potencia magnetizante</span>
-            </h3>
-          </div>
-          <div>
-            <p>
-              Ocupa espacio y capacidad en el sistema eléctrico pero no ejerce trabajo —como la
-              espuma en un vaso de cerveza—. Aparece típicamente junto a motores y
-              transformadores.
-            </p>
-            <span class="mit">Mitigación · corrección activa del factor de potencia</span>
-          </div>
-          <div class="bar" aria-hidden="true">
-            <svg viewBox="0 0 80 40" width="80" height="40">
-              <path d="M0,20 Q20,5 40,20 T80,20" fill="none" stroke="#0B1F3A" stroke-width="1.5"></path>
-            </svg>
-          </div>
-        </article>
-
-        <article class="loss">
-          <div class="ix">03</div>
-          <div>
-            <h3>Desbalance
-              <span class="sub">Asimetría trifásica</span>
-            </h3>
-          </div>
-          <div>
-            <p>
-              Ocurre cuando las tres fases no comparten la misma amplitud ni conservan su
-              desfase ideal de 120°. Inyecta una secuencia inversa que actúa frenando los
-              motores y causa ineficiencia severa.
-            </p>
-            <span class="mit">Mitigación · redistribuir cargas monofásicas · revisar impedancias</span>
-          </div>
-          <div class="bar" aria-hidden="true">
-            <svg viewBox="0 0 80 40" width="80" height="40">
-              <g stroke-width="1.5" fill="none">
-                <path d="M0,20 Q10,6 20,20 T40,20 T60,20 T80,20" stroke="#0B1F3A"></path>
-                <path d="M0,22 Q10,10 20,22 T40,22 T60,22 T80,22" stroke="#64748B" stroke-dasharray="2 2"></path>
-                <path d="M0,18 Q10,30 20,18 T40,18 T60,18 T80,18" stroke="#C8A982"></path>
-              </g>
-            </svg>
-          </div>
-        </article>
-
-        <article class="loss">
-          <div class="ix">04</div>
-          <div>
-            <h3>Distorsión armónica
-              <span class="sub">Cargas no lineales · 150, 250 Hz…</span>
-            </h3>
-          </div>
-          <div>
-            <p>
-              Cargas no lineales superponen frecuencias múltiples a la fundamental,
-              deformando visiblemente la onda. Genera calentamiento severo y desgaste
-              prematuro en transformadores y cables.
-            </p>
-            <span class="mit">Mitigación · filtros armónicos pasivos o activos</span>
-          </div>
-          <div class="bar" aria-hidden="true">
-            <svg viewBox="0 0 80 40" width="80" height="40">
-              <path d="M0,20 Q5,4 10,20 T20,20 T30,20 T40,20 T50,20 T60,20 T70,20 T80,20" fill="none" stroke="#0B1F3A" stroke-width="1.5"></path>
-              <path d="M0,20 C10,10 20,30 30,20 C40,10 50,30 60,20 C70,10 80,30 80,20" fill="none" stroke="#C8A982" stroke-width="1"></path>
-            </svg>
-          </div>
-        </article>
-
-        <article class="loss">
-          <div class="ix">05</div>
-          <div>
-            <h3>Pérdidas en el neutro
-              <span class="sub">Secuencia cero · retorno</span>
-            </h3>
-          </div>
-          <div>
-            <p>
-              Corrientes de retorno originadas por componentes de secuencia cero —tanto por
-              desbalances como por armónicos— que se acumulan en el conductor neutro y pueden
-              provocar sobrecalentamiento peligroso.
-            </p>
-            <span class="mit">Mitigación · aumentar la sección del cable neutro</span>
-          </div>
-          <div class="bar" aria-hidden="true">
-            <svg viewBox="0 0 80 40" width="80" height="40">
-              <rect x="0" y="28" width="16" height="4" fill="#0B1F3A"></rect>
-              <rect x="20" y="22" width="16" height="10" fill="#0B1F3A"></rect>
-              <rect x="40" y="14" width="16" height="18" fill="#0B1F3A"></rect>
-              <rect x="60" y="6" width="16" height="26" fill="#C8A982"></rect>
-            </svg>
-          </div>
-        </article>
-
+        <article class="loss"><div class="ix">01</div><div><h3>Pérdida efectiva <span class="sub">Disipación resistiva de línea · modelo I²R</span></h3></div><div><p>En un conductor con resistencia efectiva <code>R</code> y corriente instantánea <code>i(t)</code>, la pérdida Joule media se aproxima por <code>P<sub>J</sub> = ⟨i²(t)⟩R</code>. Este término es físico siempre que <code>R</code> represente la resistencia efectiva de la trayectoria, a la temperatura y frecuencia/modelo considerados, y que la frontera esté bien definida.</p><span class="mit">Mitigación · revisar sección, longitud, temperatura, conexiones y paralelismos</span></div><div class="bar" aria-hidden="true"><svg viewBox="0 0 80 40" width="80" height="40"><path d="M0,30 L20,28 L40,22 L60,14 L80,8" fill="none" stroke="#0B1F3A" stroke-width="1.5"></path><circle cx="80" cy="8" r="2.5" fill="#C8A982"></circle></svg></div></article>
+        <article class="loss"><div class="ix">02</div><div><h3>Componente reactiva <span class="sub">Intercambio de energía almacenada · utilización de capacidad</span></h3></div><div><p>En régimen sinusoidal, <code>Q</code> representa el intercambio neto asociado a elementos inductivos y capacitivos. No es una pérdida Joule directa, aunque una corriente reactiva puede aumentar indirectamente <code>I²R</code> en una resistencia de red no nula.</p><span class="mit">Mitigación · evaluar compensación y estudiar resonancias, armónicos y transitorios</span></div><div class="bar" aria-hidden="true"><svg viewBox="0 0 80 40" width="80" height="40"><path d="M0,20 Q20,5 40,20 T80,20" fill="none" stroke="#0B1F3A" stroke-width="1.5"></path></svg></div></article>
+        <article class="loss"><div class="ix">03</div><div><h3>Desequilibrio <span class="sub">Secuencias positiva, negativa y cero · sistema trifásico</span></h3></div><div><p>La secuencia negativa puede producir calentamiento adicional y par inverso en motores; una componente de secuencia cero puede circular por el neutro o por otros caminos según la conexión. Un desbalance medido no prueba que la carga local sea la única causa.</p><span class="mit">Mitigación · balancear cargas y revisar impedancias, conexiones, tensión y motores</span></div><div class="bar" aria-hidden="true"><svg viewBox="0 0 80 40" width="80" height="40"><g stroke-width="1.5" fill="none"><path d="M0,20 Q10,6 20,20 T40,20 T60,20 T80,20" stroke="#0B1F3A"></path><path d="M0,22 Q10,10 20,22 T40,22 T60,22 T80,22" stroke="#64748B" stroke-dasharray="2 2"></path><path d="M0,18 Q10,30 20,18 T40,18 T60,18 T80,18" stroke="#C8A982"></path></g></svg></div></article>
+        <article class="loss"><div class="ix">04</div><div><h3>Distorsión <span class="sub">Corrientes y tensiones armónicas · espectro declarado</span></h3></div><div><p>El THD es un indicador espectral, no una potencia ni una energía. Una corriente armónica puede aumentar el RMS, las pérdidas en conductores y el calentamiento de transformadores, pero la magnitud no se obtiene multiplicando THD por una tarifa.</p><span class="mit">Mitigación · seleccionar filtros y reactancias tras estudiar espectro e impedancia</span></div><div class="bar" aria-hidden="true"><svg viewBox="0 0 80 40" width="80" height="40"><path d="M0,20 Q5,4 10,20 T20,20 T30,20 T40,20 T50,20 T60,20 T70,20 T80,20" fill="none" stroke="#0B1F3A" stroke-width="1.5"></path><path d="M0,20 C10,10 20,30 30,20 C40,10 50,30 60,20 C70,10 80,30 80,20" fill="none" stroke="#C8A982" stroke-width="1"></path></svg></div></article>
+        <article class="loss"><div class="ix">05</div><div><h3>Corriente de neutro <span class="sub">Retorno y secuencia cero · impedancia de trayectoria</span></h3></div><div><p>En un sistema trifásico de cuatro hilos, la corriente de neutro puede incluir componentes de secuencia cero y armónicos triplén. Puede generar pérdida resistiva <code>P<sub>N</sub> = I<sub>N,rms</sub>² R<sub>N</sub></code> cuando el conductor y sus conexiones presentan resistencia; la topología y el camino de retorno importan.</p><span class="mit">Mitigación · medir espectro y temperatura antes de modificar conductores o protecciones</span></div><div class="bar" aria-hidden="true"><svg viewBox="0 0 80 40" width="80" height="40"><rect x="0" y="28" width="16" height="4" fill="#0B1F3A"></rect><rect x="20" y="22" width="16" height="10" fill="#0B1F3A"></rect><rect x="40" y="14" width="16" height="18" fill="#0B1F3A"></rect><rect x="60" y="6" width="16" height="26" fill="#C8A982"></rect></svg></div></article>
       </div>
 
       <h2 id="cap-4"><span class="num">§ 04</span> Configurar la resistencia de línea</h2>
-
       <figure class="inflow lit">
-        <div class="shot">
-          <img src="assets/fieldwork.jpg" alt="Técnico con EPI midiendo un tablero eléctrico con un analizador Fluke 1777">
-        </div>
-        <figcaption>
-          <span class="tag">Figura 02</span>
-          <span>Caracterización en campo: <b>el analizador se conecta directamente al tablero</b> mientras el equipo está en operación. La calidad del dato de entrada —y, sobre todo, de la resistencia de línea— determina la fidelidad del diagnóstico económico posterior.</span>
-        </figcaption>
+        <div class="shot"><img src="assets/fieldwork.jpg" alt="Técnico con equipo de protección realizando una medición de calidad de energía en un tablero; la imagen ilustra la instalación de sensores y la necesidad de documentar la frontera y las condiciones de medida."></div>
+        <figcaption><span class="tag">Figura 02</span><span>Caracterización en campo: la conexión del analizador, la configuración de la topología y la calidad de las señales determinan la utilidad del diagnóstico. La resistencia de línea debe referirse a una trayectoria y una temperatura concretas; no es un parámetro universal del tablero.</span></figcaption>
       </figure>
+      <p>La resistencia de línea es un parámetro de modelo para estimar la disipación asociada con una trayectoria definida. Antes de introducirla, el ingeniero debe documentar el unifilar, el punto de medida, la longitud y sección de los conductores, conexiones, temperatura, conductores en paralelo, transformadores incluidos o excluidos y si el modelo usa resistencia de fase a fase, de fase a neutro o una resistencia equivalente por fase.</p>
+      <p>Si se usa <code>P<sub>J</sub> ≈ I²R</code>, la corriente debe corresponder a la misma trayectoria a la que se asigna <code>R</code>. En régimen no sinusoidal, una sola resistencia a frecuencia fundamental puede ser insuficiente; el informe debe indicar si el cálculo incorpora corrección térmica, utiliza un modelo equivalente del instrumento o suma términos como <code>Σ<sub>h</sub> I<sub>h,rms</sub>² R<sub>h</sub></code>.</p>
+      <table class="config-table"><thead><tr><th>#</th><th>Vía de ingreso</th><th>Descripción y trazabilidad</th></tr></thead><tbody>
+        <tr><td>01</td><td>Estimación a partir de protección</td><td>El calibre del disyuntor no determina por sí solo la resistencia. Puede servir como aproximación preliminar, pero la incertidumbre incluye longitud, sección, material, conexiones, temperatura y trayectoria real. No usar como valor contractual sin validación.</td></tr>
+        <tr><td>02</td><td>Cálculo por conductor</td><td>Derivar el valor a partir de material, longitud, sección, temperatura y, cuando sea necesario, correcciones de frecuencia y configuración. Conservar esquema, hipótesis y fichas del conductor.</td></tr>
+        <tr><td>03</td><td>Medición directa o ensayo validado</td><td>Un miliohmímetro puede caracterizar conexiones y tramos accesibles, con el circuito seguro y un método compatible con la frontera del cálculo. La medición directa no corrige por sí sola temperatura ni todos los efectos de frecuencia.</td></tr>
+      </tbody></table>
+      <p><strong>Source loss</strong> y <strong>line loss</strong> son nombres de salida del algoritmo/configuración de ELC, no categorías normativas de IEEE 1459 ni mediciones directas de cada tramo; su separación también es una decisión de frontera. Una medida aguas abajo de la acometida no observa directamente todas las pérdidas de la red de la distribuidora; comparar puntos requiere sincronización, topología y condiciones de carga comparables. La asignación del algoritmo no constituye una prueba de causalidad ni determina quién es responsable frente a un contrato.</p>
 
-      <p>
-        Para que la Calculadora de Pérdidas de Energía opere correctamente, el ingeniero debe
-        configurar adecuadamente las especificaciones del sistema. El parámetro más crítico es
-        la <strong>resistencia de la línea</strong>. El UPM admite ingresarlo por tres vías,
-        cada una con un compromiso distinto entre rapidez y precisión:
-      </p>
-
-      <table class="config-table">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Vía de ingreso</th>
-            <th>Descripción · precisión</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>01</td>
-            <td>Estimación por disyuntor</td>
-            <td>Se deriva del amperaje máximo del interruptor de protección. Rápido, pero con una banda amplia de incertidumbre. Útil para tamizar rápido varias líneas.</td>
-          </tr>
-          <tr>
-            <td>02</td>
-            <td>Cálculo por conductor</td>
-            <td>Se ingresan material, sección transversal y longitud del cable. Entrega un valor teórico coherente con el diseño de la instalación.</td>
-          </tr>
-          <tr>
-            <td>03</td>
-            <td>Medición directa</td>
-            <td>Se introduce el valor obtenido con un miliohmímetro de precisión. Es la opción más exacta y la recomendada para diagnósticos monetizados.</td>
-          </tr>
-        </tbody>
-      </table>
-
-      <p>
-        Con la resistencia bien caracterizada, el algoritmo es capaz de determinar si el origen
-        de las pérdidas proviene <strong>intrínsecamente del lado de la acometida</strong>
-        (fuente) o de los <strong>conductores internos de la instalación</strong> (línea). Esa
-        distinción, en la práctica, decide si el interlocutor es la distribuidora o el propio
-        equipo de mantenimiento interno.
-      </p>
-
-      <h2 id="cap-5"><span class="num">§ 05</span> Traducir físicas en dólares</h2>
-
-      <figure class="inflow">
-        <div class="shot">
-          <img src="assets/elc-screen.png" alt="Pantalla Energy Loss Overview del Fluke 1777: pérdida total, pérdida en línea y pérdida en fuente desglosadas por efectiva, reactiva, desbalance, distorsión y neutro">
-        </div>
-        <figcaption>
-          <span class="tag">Figura 03</span>
-          <span>Pantalla <b>Energy Loss Overview</b> del Fluke 1777. El ELC separa <b>Total Loss</b> en <b>Line Loss</b> (conductores internos) y <b>Source Loss</b> (acometida), y detalla cada una de las cinco categorías con su equivalente energético anual en kWh/año.</span>
-        </figcaption>
-      </figure>
-
-      <p>
-        El aspecto más disruptivo de la implementación del UPM en el software de los equipos es
-        su capacidad de <span class="hi">monetizar directamente las fallas técnicas</span>. Al
-        introducir la tarifa eléctrica que paga la planta —el valor en divisas locales por
-        kWh—, la calculadora proyecta el costo económico anual de cada uno de los cinco
-        fenómenos de pérdida.
-      </p>
-
-      <p>
-        En lugar de entregar un porcentaje abstracto de distorsión (THD), el equipo muestra con
-        precisión <strong>cuántos miles de dólares al año se desperdician exclusivamente por
-        culpa de los armónicos</strong> frente al desbalance, o cuánto pesa el calentamiento de
-        línea frente a la reactiva. El reporte deja de ser un documento para especialistas y se
-        convierte en un presupuesto.
-      </p>
+      <h2 id="cap-5"><span class="num">§ 05</span> Traducir magnitudes físicas en un equivalente económico</h2>
+      <figure class="inflow"><div class="shot"><img src="assets/elc-screen.png" alt="Pantalla de análisis de pérdidas de un instrumento de calidad de energía, con categorías de pérdida y separación entre línea y fuente; los valores dependen de la configuración, la ventana de medida y el modelo económico."></div><figcaption><span class="tag">Figura 03</span><span>La vista de pérdidas organiza resultados calculados por el algoritmo/configuración de ELC para una frontera y un periodo concretos. <b>Line loss</b> y <b>source loss</b> deben leerse como asignaciones del modelo configurado; no equivalen automáticamente a pérdidas medidas en cada tramo físico ni a una liquidación tarifaria.</span></figcaption></figure>
+      <p>La monetización es una segunda capa del análisis. Primero se obtiene una energía o potencia equivalente conforme a la medición y al modelo; después se aplica una tarifa documentada. Para un término <code>j</code>, una anualización simple puede escribirse como <code>Costo_anual,j = E_equivalente,j × c_E</code>, si <code>c_E</code> es una tarifa energética constante en moneda/kWh. Cuando la tarifa varía por periodo, el cálculo debe hacerse por intervalos y declarar también los cargos de demanda si existen.</p>
+      <p>La anualización exige especificar <strong>ventana de medida, fecha y duración, perfil de carga, extrapolación, disponibilidad de datos, tarifa, moneda, periodo de facturación y frontera de medición</strong>. Si se midieron 24 horas durante un día de producción normal, no es defendible multiplicar sin más por 365 cuando existen turnos, fines de semana, estacionalidad o paradas. Una práctica trazable es construir escenarios base, bajo y alto.</p>
+      <p>El resultado debe llamarse “equivalente económico estimado” o “coste anualizado bajo los supuestos indicados”. No es correcto afirmar que el instrumento muestra cuántos dólares se desperdician exclusivamente por culpa de los armónicos si no se ha establecido causalidad y si la tarifa, la carga y la frontera no están documentadas. El THD tampoco es una partida monetaria.</p>
+      <p><strong>Bloque mínimo de supuestos:</strong> punto y frontera; fecha, duración y agregación; estado de cargas y compensación; clase, sensores, relaciones y sincronización; edición normativa y bandas espectrales; tarifa y vigencia; factor de extrapolación e incertidumbre.</p>
 
       <h2 id="cap-6"><span class="num">§ 06</span> ROI, ISO&nbsp;50001 y decisiones</h2>
+      <p>Un diagnóstico de UPM/ELC puede aportar una entrada cuantitativa para evaluar medidas de mitigación, pero no produce por sí solo un ROI. El ahorro neto debe comparar una línea base y un escenario posterior con la misma frontera y condiciones de carga, e incluir inversión, instalación, mantenimiento, disponibilidad, vida útil, coste de capital, impacto en producción y posibles efectos secundarios. Un cálculo básico puede expresarse como <code>ROI_simple = (ahorro_anual − costes_anuales) / inversión</code>, siempre que cada término esté definido.</p>
+      <p>La selección de filtros, compensación reactiva, redistribución de cargas o refuerzo de conductores exige revisar resonancias, variación de impedancia de red, corrientes de cortocircuito, coordinación de protecciones, ampacidad, temperatura, compatibilidad electromagnética y límites del código de red o del contrato. La intervención debe verificarse mediante una campaña posterior con condiciones de carga comparables.</p>
+      <p>ISO 50001 puede proporcionar un marco de gestión de la energía, pero el uso de UPM/ELC <strong>no es indispensable por definición para cumplir ISO 50001</strong>. La conformidad depende del sistema de gestión, alcance, revisión energética, indicadores, línea base, objetivos, datos y evidencias que exija la edición aplicable y el proceso de auditoría. UPM puede ser una herramienta complementaria si sus supuestos, datos y resultados son adecuados.</p>
+      <blockquote class="pullquote">“Una cifra anualizada es útil para decidir solo cuando se puede reconstruir desde la medida, el modelo, el perfil de carga y la tarifa.”</blockquote>
 
-      <p>
-        Este nivel de visibilidad financiera transforma los reportes de calidad eléctrica en
-        herramientas de alto impacto gerencial. Facilita el cálculo del
-        <strong>Retorno de Inversión (ROI)</strong> necesario para justificar la compra de
-        activos de mitigación —filtros activos, bancos de condensadores, modernización de
-        infraestructura— porque el ahorro proyectado ya viene expresado en la misma unidad que
-        la cotización del proveedor.
-      </p>
+      <aside class="closing"><div><div class="label">En síntesis</div><h3>De la magnitud medida al supuesto defendible.</h3></div><p>El UPM/ELC puede ordenar un diagnóstico complejo y expresar algunas contribuciones en energía equivalente y moneda. Su uso riguroso requiere distinguir potencia de energía, demanda de consumo, disipación Joule de utilización de capacidad y estimación económica de facturación. El resultado más sólido no es la cifra más alta, sino un balance reproducible: frontera, ventana, perfil de carga, parámetros eléctricos, tarifa, incertidumbre y validación posterior.</p></aside>
 
-      <p>
-        Finalmente, la adopción del Método de Potencia Unificada resulta indispensable para
-        aquellas organizaciones comerciales e industriales que persiguen el cumplimiento de
-        normativas estrictas como la <strong>ISO&nbsp;50001</strong>, aportando un diagnóstico
-        exacto, inteligente y rentable sobre la eficiencia y la gestión de sus recursos
-        energéticos.
-      </p>
+      <section class="sources" aria-labelledby="sources-title">
+        <h2 id="sources-title"><span class="num">Fuentes</span> Referencias y límites de uso</h2>
+        <p>Estas referencias sostienen el marco técnico del artículo. La edición aplicable de cada documento y las funciones disponibles del instrumento deben verificarse antes de usar el resultado para especificación, conformidad o contrato.</p>
+        <ol>
+          <li><a href="https://standards.ieee.org/ieee/1459/4088/">IEEE 1459-2010 — IEEE SA</a> — Título, alcance resumido, estado del estándar y referencia a IEEE 1459-2025.</li>
+          <li><a href="https://webstore.iec.ch/en/publication/71611">IEC 61000-4-30:2025 — IEC Webstore</a> — Métodos de medición e interpretación de parámetros de calidad de energía; la edición 2025 contempla clases A y S. La clase y la edición aplicables deben confirmarse para el instrumento concreto.</li>
+          <li><a href="https://www.fluke.com/en-us/products/electrical-testing">Fluke — Electrical tools / Power quality</a> — Portal oficial para localizar la ficha y el manual regional del modelo utilizado.</li>
+          <li><a href="https://www.fluke.com/en-us/support">Fluke — soporte y documentación</a> — Punto de acceso a manuales, fichas técnicas y notas de aplicación de la Serie 1770.</li>
+        </ol>
+        <p><strong>Nota editorial:</strong> no se incluyen DOI, números de patente, cifras de ahorro ni datos de colaboración institucional no verificables. Este artículo es un prototipo editorial: no presupone que una edición normativa, modelo, firmware, mercado o función de documentación sea universal.</p>
+      </section>
 
-      <!-- CLOSING -->
-      <aside class="closing">
-        <div>
-          <div class="label">En síntesis</div>
-          <h3>Del porcentaje abstracto al presupuesto defendible.</h3>
-        </div>
-        <p>
-          El UPM no inventa una física nueva: reorganiza la existente en categorías con sentido
-          práctico y les pone un precio. Ese gesto —aparentemente modesto— cambia quién está
-          sentado en la mesa cuando se discute eficiencia: ya no solo el ingeniero de
-          mantenimiento, sino también la dirección financiera.
-        </p>
-      </aside>
-
-      <!-- Colophon -->
       <footer class="colophon">
         <div><b>Dossier UPM</b> · Redacción técnica</div>
-        <div>Fuentes · IEEE&nbsp;1459 (2010) · Fluke × UPV</div>
+        <div>Referencias · IEEE 1459-2010 · IEC 61000-4-30:2025 · documentación oficial del fabricante</div>
         <div>Pág. <b>01</b></div>
       </footer>
-
     </div>
   </section>
-
 </main>
-
-
 </body></html>
